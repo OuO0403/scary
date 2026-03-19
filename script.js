@@ -2,9 +2,10 @@ const GAS_URL = "你的_GOOGLE_APPS_SCRIPT_網頁應用程式網址";
 
 // 定義 24 題題目
 const quizQuestions = [
-    { q: "當你獨自在深海 8000 公尺處，聽見艙門外的敲擊聲，你會開門嗎？", options: ["絕對不會", "視情況而定", "立即回報"] },
-    { q: "如果你發現同事的行為變得異常精準且不具情感，你會懷疑他是 AI 嗎？", options: ["會", "不會"] },
-    { q: "最後一個問題：如果你即將面對的真相會崩潰你的認知，你還要繼續嗎？", options: ["是", "否"] }
+    { q: "我認為在深海環境中保持理智是容易的。" },
+    { q: "面對未知的生命體，我會優先選擇溝通而非武力。" },
+    { q: "我完全信任這座設施的人工智慧系統。" },
+    
 ];
 
 let currentQuizIndex = 0;
@@ -83,18 +84,24 @@ function prevQuestion() {
 }
 
 function submitToSheets() {
-    document.getElementById('quiz-main').innerHTML = "<h2 style='color:#00d2d3;'>正在加密傳輸數據...</h2>";
-    
-    const data = {
+    // 建立一個要傳送的資料物件
+    const payload = {
         playerID: document.getElementById('quiz-player-id').value,
         gender: document.getElementById('quiz-gender').value,
-        answers: quizAnswers
     };
+
+    // 重點：將答案陣列轉換成 q1, q2, q3... 格式
+    quizAnswers.forEach((answer, index) => {
+        // index 從 0 開始，所以要 +1 變成 q1, q2...
+        payload["q" + (index + 1)] = answer;
+    });
+
+    console.log("準備傳送的資料：", payload);
 
     fetch(GAS_URL, {
         method: 'POST',
         mode: 'no-cors',
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload) // 傳送轉換後的物件
     }).then(() => {
         document.getElementById('quiz-main').style.display = 'none';
         document.getElementById('quiz-ready').style.display = 'block';
