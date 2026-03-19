@@ -1,4 +1,4 @@
-const GAS_URL = "你的_GOOGLE_APPS_SCRIPT_網頁應用程式網址";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxQJLWa26Gj6g5hYGVIOptKGl9UUDe_3BtvpqEf6VS0-tPcz42wywfUwShQfukP8beO/exec";
 
 // 定義 24 題題目
 const quizQuestions = [
