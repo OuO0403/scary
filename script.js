@@ -52,28 +52,25 @@ function showQuestion() {
     const prevBtn = document.getElementById('btn-prev-quiz');
     const questionData = quizQuestions[currentQuizIndex];
 
-    progress.style.width = `${((currentQuizIndex) / quizQuestions.length) * 100}%`;
+    if (!questionData) return; // 安全檢查
+
+    progress.style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
     prevBtn.style.display = (currentQuizIndex === 0) ? 'none' : 'inline-block';
 
     const previousAnswer = quizAnswers[currentQuizIndex];
-    
-    // 標題
-    let html = `<p class='quiz-q-text'>Q${currentQuizIndex + 1}: ${questionData.q}</p>`;
-    
-    // 建立五點量表的容器
-    html += `<div class="likert-scale">`;
-    
-    // 五個分點的文字（可以根據需求修改）
     const labels = ["非常不同意", "不同意", "普通", "同意", "非常同意"];
     
+    let html = `<p class='quiz-q-text'>Q${currentQuizIndex + 1}: ${questionData.q}</p>`;
+    html += `<div class="likert-scale">`;
+
     labels.forEach((label, index) => {
         const value = index + 1; // 數值 1 ~ 5
         const isChecked = (previousAnswer == value) ? 'checked' : '';
         
-        html += `
+    html += `
             <div class="likert-item">
-                <input type="radio" name="q" id="opt${index}" value="${value}" ${isChecked}>
-                <label for="opt${index}">${label}</label>
+                <input type="radio" name="q" id="opt${val}" value="${val}" ${isChecked}>
+                <label for="opt${val}">${label}</label>
             </div>
         `;
     });
@@ -84,7 +81,10 @@ function showQuestion() {
 
 function nextQuestion() {
     const selected = document.querySelector('input[name="q"]:checked');
-    if (!selected) return alert("請選擇一個選項。");
+    if (!selected) {
+        alert("請選擇一個選項。");
+        return;
+    }
 
     quizAnswers[currentQuizIndex] = selected.value;
 
