@@ -79,7 +79,8 @@
         let aiTalkInterval = null, currentRound = 1, speechErrors = 0;
 
         function switchScene(id) { document.querySelectorAll('.scene').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-        function startSurvey() { switchScene('scene-survey'); }
+        function startSurvey() { showScene('scene-form'); }
+        function fromFormToSurvey() { showScene('scene-survey'); }
         function submitSurvey(e) { e.preventDefault(); switchScene('scene-loading'); setTimeout(() => { switchScene('scene-char-select'); initCharBook(); }, 2000); }
         function initCharBook() { currentPage = 0; renderPage(); }
         function renderPage() {
