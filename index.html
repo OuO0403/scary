@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>POSEIDON-9: 深海科研站 (沈浸式結局版)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="message-box">提示訊息</div>
+    
+    <div id="afk-overlay">
+        <div class="afk-text">⚠️ 訊號中斷：請問您還在線嗎？</div>
+        <button class="btn-resume" onclick="resumeFromAFK()">恢復連線</button>
+    </div>
+
+    <div id="inventory-bar"></div>
+    <button id="btn-sidebar" onclick="openSidebar()">📋 檔案</button>
+
+    <div id="scene-title" class="scene active">
+        <h1 class="glitch-title">POSEIDON-9</h1>
+        <div class="subtitle">深海科研站：波塞頓九號</div>
+        <p class="status-text">深度: -8000m | 氧氣: 12H | 狀態: <span style="color:red; animation: blink 1s infinite;">紅色警報</span></p>
+        <button class="btn-start" onclick="startSurvey()">介入調查</button>
+    </div>
+
+    <div id="scene-survey" class="scene">
+        <div class="paper-sheet">
+            <div style="border-bottom: 2px solid #222; margin-bottom: 20px;"><h2>外部審查官登錄</h2><small>CONFIDENTIAL ACCESS ONLY</small></div>
+            <form onsubmit="submitSurvey(event)">
+                <div style="margin-bottom: 20px; text-align: left;">
+                    <label>代號 (CODENAME):</label>
+                    <input type="text" id="input-name" placeholder="輸入代號..." required autocomplete="off">
+                </div>
+                <button type="submit" class="btn-start" style="width:100%; background:#222; color:white; font-size:16px; border:none;">連接神經網路</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="scene-loading" class="scene">
+        <div style="font-size: 24px; color: #fff;">正在下載人員檔案...</div>
+        <p id="player-greeting" style="color: #888; margin-top: 20px;"></p>
+    </div>
+
+    <div id="scene-char-select" class="scene">
+        <div class="book-container">
+            <button class="book-nav prev" onclick="changePage(-1)">&#10094;</button>
+            <button class="book-nav next" onclick="changePage(1)">&#10095;</button>
+            <div id="book-page"></div>
+            <div style="position: absolute; bottom: 10px; right: 20px; color:#555;">Page <span id="page-num">1</span></div>
+        </div>
+    </div>
+
+    <div id="char-modal" class="modal-overlay">
+        <div class="char-detail-content">
+            <button class="btn-close-modal" onclick="closeCharDetail()">X</button>
+            <div class="detail-left"><img id="detail-img" src=""></div>
+            <div class="detail-right">
+                <h1 id="detail-name"></h1><hr>
+                <p><strong>年齡：</strong> <span id="detail-age"></span></p>
+                <p><strong>身分：</strong> <span id="detail-identity"></span></p>
+                <p><strong>個性：</strong> <span id="detail-personality"></span></p>
+                <br><p><strong>【劇本簡介】</strong></p>
+                <p id="detail-intro" style="line-height: 1.6; color:#555;"></p>
+            </div>
+            <button class="btn-confirm-char" onclick="confirmCharacter()">確認選擇</button>
+        </div>
+    </div>
+
+    <div id="private-script-modal" class="modal-overlay">
+        <div class="script-content">
+            <h1 style="color:#ff7675;">TOP SECRET // 個人機密檔案</h1>
+            <h2 id="private-role-name"></h2><hr style="border-color:#555;">
+            <h3>【你的秘密與過去】</h3><p id="private-full-story"></p>
+            <h3>【本次任務目標】</h3><p id="private-mission"></p>
+            <button class="btn-next-step" onclick="finishPrivateScript()">銷毀檔案並進入主線</button>
+        </div>
+    </div>
+
+    <div id="main-story-modal" class="modal-overlay">
+        <div class="script-content">
+            <h1>SYSTEM ALERT: RED LEVEL</h1>
+            <p><strong>時間：</strong>西元 2084 年 | <strong>地點：</strong>馬里亞納海溝 -8000m (波塞頓九號)</p>
+            <hr>
+            <h3>【起始事件】</h3>
+            <ul>
+                <li><strong>20:00</strong> - 科研站剛完成「深淵之心」實驗，突發紅色警報，中央伺服器室封鎖。</li>
+                <li><strong>20:15</strong> - 眾人強行破門，發現首席科學家 <strong>Dr. Aris Thorne</strong> 倒斃於控制台前，死狀痛苦。</li>
+                <li><strong>現況</strong> - 房間呈現完全密室狀態。深海風暴導致通訊中斷，備用氧氣僅剩 12 小時。</li>
+            </ul>
+            <button class="btn-next-step" onclick="enterGame()">開始搜查 (限時 2 分鐘)</button>
+        </div>
+    </div>
+
+    <div id="game-stage-container" class="scene">
+        <div id="game-stage"></div>
+        <div id="game-ui-layer">
+            <div id="top-left-panel">
+                <div class="hud-box round-display">ROUND <span id="round-num">1</span></div>
+                <div class="hud-box">📍 <span id="location-name">未知區域</span></div>
+                <div class="hud-box">🕒 <span id="timer">02:00</span></div>
+                <div class="hud-box btn-shop" onclick="openShop()">🛒 購物車 (<span id="coin-display">0</span> G)</div>
+            </div>
+            <div class="look-arrow look-left" onclick="panView('left')">&#10094;</div>
+            <div class="look-arrow look-right" onclick="panView('right')">&#10095;</div>
+            <button class="btn-map" onclick="openMap()">🗺️ 地圖</button>
+            <button class="btn-meeting" onclick="enterDiscussion()">📢 緊急會議</button>
+        </div>
+    </div>
+
+    <div id="discussion-scene" class="scene">
+        <div class="notebook-panel">
+            <h3 style="color:#00d2d3; margin-top:0;">推理筆記本</h3>
+            <div class="nb-tabs"><button class="nb-tab active" onclick="switchNoteTab('evidence')">證物關聯</button><button class="nb-tab" onclick="switchNoteTab('timeline')">時間軸</button></div>
+            <div id="nb-evidence" class="nb-content active">
+                <div style="font-size:12px; color:#888; margin-bottom:5px;">1. 選擇嫌疑人</div>
+                <div class="char-selector" id="nb-char-list"></div>
+                <div id="nb-selected-info" class="nb-info-box"></div>
+                <div style="font-size:12px; color:#888; margin:10px 0 5px;">2. 拖曳背包證物至此</div>
+                <div id="evidence-drop-zone" class="evidence-box">請先選擇上方角色</div>
+            </div>
+            <div id="nb-timeline" class="nb-content">
+                <div style="font-size:12px; color:#888; margin-bottom:5px;">1. 選擇角色</div>
+                <div class="char-selector" id="nb-timeline-char-list"></div>
+                <button onclick="addTimelineEntry()" style="width:100%; background:#444; border:none; color:white; padding:5px; cursor:pointer; margin-top:10px;">+ 新增紀錄</button>
+                <div id="timeline-container" style="margin-top:10px;"></div>
+            </div>
+        </div>
+        <div class="dashboard-panel">
+            <div id="discussion-timer" class="discussion-timer-display">05:00</div>
+            <div class="speedometer" id="speedometer"><div class="needle" id="needle"></div><div class="needle-center"></div></div>
+            <div class="transcription-box" id="transcription-box">[等待發言...]</div>
+            <div class="status-label" id="speech-status">請點擊右側按鈕開始發言</div>
+        </div>
+        
+        <div class="ai-speaking-stage">
+            <h2 style="color:#aaa;">聆聽模式 (Listening Mode)</h2>
+            <img id="ai-active-avatar" class="ai-avatar-display" src="">
+            <div id="ai-active-name" class="ai-name-display">...</div>
+        </div>
+
+        <div class="controls-panel">
+            <button class="ctrl-btn btn-mic" id="btn-mic" onclick="toggleMic()">🎤<span>開始對話</span></button>
+            <button class="ctrl-btn btn-cart" onclick="openShop()">🛒<span>商店</span></button>
+            <button class="ctrl-btn btn-finish" id="btn-finish" onclick="finishSpeaking()">✅<span>發言結束</span></button>
+            <button class="ctrl-btn btn-end-meeting" onclick="endMeeting()">🚫<span>結束會議</span></button>
+        </div>
+    </div>
+
+    <div id="scene-voting" class="scene">
+        <h1 style="color:#d63031; text-transform: uppercase;">⚠️ 最終投票 ⚠️</h1>
+        <p style="color:#aaa; margin-bottom: 30px;">請選擇你認為的真兇 (票數最高者將被流放)</p>
+        <div id="voting-container" class="voting-grid"></div>
+    </div>
+
+    <div id="scene-result" class="scene">
+        <div id="result-content" style="max-width:800px; text-align:center;"></div>
+        <div id="stats-display" class="stat-box">
+             <p>表達失誤：<span id="end-errors" style="color:#d63031">0</span> 次</p>
+             <p>您的表現超越了 <span id="percentile">0</span>% 的玩家</p>
+        </div>
+        <div class="end-buttons">
+            <button class="btn-secondary" onclick="returnToHome()">回到首頁</button>
+            <button class="btn-secondary" onclick="returnToCharSelect()">重新選角</button>
+        </div>
+    </div>
+
+    <div id="sidebar-panel">
+        <button class="close-sidebar" onclick="closeSidebar()">X</button>
+        <h2 style="color:#00d2d3;">系統資料庫</h2>
+        <div class="sidebar-tabs">
+            <button class="tab-btn active" onclick="switchTab('rule')">規則</button>
+            <button class="tab-btn" onclick="switchTab('role')">角色</button>
+            <button class="tab-btn" onclick="switchTab('story')">主線</button>
+        </div>
+        <div id="tab-rule" class="tab-content active">
+            <h3>劇本殺基本規則</h3>
+            <p>1. <strong>角色扮演 (Roleplay)</strong>：請完全代入你的角色，絕對<strong>不可以照念劇本</strong>，請用自己的話說出角色的認知。</p>
+            <p>2. <strong>資訊分享</strong>：你可以選擇公開你的線索，也可以選擇隱瞞或說謊（除非角色限制不能說謊）。</p>
+            <p>3. <strong>搜查規則</strong>：背包空間有限 (5格)，金幣可重生 (35秒)。</p>
+            <p>4. <strong>勝利條件</strong>：限時 4 分鐘內找出真兇。</p>
+        </div>
+        <div id="tab-role" class="tab-content"></div>
+        <div id="tab-story" class="tab-content">
+            <p>20:00 紅色警報，密室封鎖。</p>
+            <p>20:15 發現屍體。</p>
+            <p>通訊中斷，全員嫌疑。</p>
+        </div>
+    </div>
+
+    <div id="shop-modal" class="modal-overlay">
+        <div style="background:#fff; width:500px; padding:30px; border-radius:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="margin:0; color:#f39c12;">🛒 交易所</h2>
+                <button onclick="document.getElementById('shop-modal').style.display='none'" style="border:none; background:none; font-size:20px; cursor:pointer;">X</button>
+            </div>
+            <p>持有: <span id="shop-coin-display" style="font-weight:bold; color:#d63031;">0</span> G</p>
+            <hr><div id="shop-list" style="max-height:300px; overflow-y:auto;"></div>
+        </div>
+    </div>
+
+    <div id="pickup-modal" class="modal-overlay">
+        <div style="background:#fff; width:400px; padding:30px; border-radius:10px; text-align:center;">
+            <h2 id="pickup-name" style="color:#2d3436;"></h2>
+            <img id="pickup-img" src="" style="width:100px; height:100px; object-fit:contain; margin:10px 0;">
+            <p style="color:#555;">要調查這個物品嗎？<br><small>(佔用 1 格背包)</small></p>
+            <div style="display:flex; justify-content:space-around; margin-top:20px;">
+                <button onclick="cancelPickup()" style="padding:10px 20px; background:#aaa; color:white; border:none; cursor:pointer; border-radius:5px;">放回去</button>
+                <button onclick="confirmPickup()" style="padding:10px 20px; background:#0984e3; color:white; border:none; cursor:pointer; border-radius:5px;">調查並收集</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="file-modal" class="modal-overlay">
+        <div style="background:#fff; width:500px; padding:40px; border-radius:5px; position:relative;">
+            <button onclick="document.getElementById('file-modal').style.display='none'" style="position:absolute; top:10px; right:10px; border:none; background:none; font-size:20px; cursor:pointer;">X</button>
+            <h2 id="file-title" style="color:#d63031;"></h2>
+            <div id="file-location" style="color:#555; font-size:14px; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;"></div>
+            <p id="file-text" style="line-height:1.6; white-space: pre-wrap; color:#333;"></p>
+            <p style="color:red; font-size:12px; margin-top:20px;">[系統] 已收錄至證物袋。</p>
+        </div>
+    </div>
+
+    <div id="map-modal">
+        <div class="map-content">
+            <button onclick="closeMap()" style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; padding:5px 10px; cursor:pointer;">關閉</button>
+            <h2 style="color:#00d2d3; text-align:center; margin-top:20px;">POSEIDON-9 結構圖</h2>
+            <div class="map-room" style="top:10%; left:35%; width:30%; height:20%;" onclick="teleport('server_room_front')">中央伺服器室<br>(案發)</div>
+            <div class="map-room" style="top:40%; left:10%; width:20%; height:20%;" onclick="teleport('security_hub_front')">安保監控室<div class="lock-icon">🔒</div></div>
+            <div class="map-room" style="top:40%; right:10%; width:20%; height:20%;" onclick="teleport('directors_office_front')">總監辦公室<div class="lock-icon">🔒</div></div>
+            <div class="map-room" style="top:70%; left:10%; width:20%; height:20%;" onclick="teleport('engineering_front')">維修工程區</div>
+            <div class="map-room" style="top:70%; right:10%; width:20%; height:20%;" onclick="teleport('living_quarters_front')">船員休息區</div>
+            <div class="map-room" style="top:70%; left:35%; width:30%; height:20%;" onclick="teleport('storage_front')">氣體儲藏區<div class="lock-icon">🔒</div></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
