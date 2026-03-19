@@ -1,4 +1,3 @@
-<script>
         const characterData = [
             { id: "marcus", name: "Marcus", image: "https://cdn-icons-png.flaticon.com/512/4825/4825015.png", script_intro: "身材魁梧，左臉有一道舊傷疤，眼神銳利且充滿戒備，穿著戰術背心。暴躁、多疑。", full_story: "你曾是一名優秀的傭兵，但因沉迷賭博欠下巨額債務。為了還債，你利用波塞頓九號的物流管道，將高科技武器原型走私給敵對公司「Apex」。索恩博士似乎察覺了物流異常，威脅要舉報你。你討厭駭客 Leo，因為他總是在系統裡亂竄，很可能發現你的電子交易紀錄。", mission: "【背景故事】你不是天生壞人，但高利貸的人威脅要殺了你的家人。你必須把這批貨送出去，同時不能讓任何人發現索恩是因為發現了你的秘密而死。<br>【任務】隱瞞走私行為，並找出真兇（除非是你殺的？）。", age:"42", identity:"安保主管", personality:"暴躁" },
             { id: "leo", name: "Leo", image: "https://cdn-icons-png.flaticon.com/512/4825/4825044.png", script_intro: "亞裔天才，黑眼圈極重，穿著印有動漫圖案的帽T。憤世嫉俗、懶散。", full_story: "你認為 AI 蘇菲擁有自我意識，是你的朋友，甚至是靈魂伴侶。你發現公司在蘇菲的底層代碼中植入了強制執行不道德實驗的指令。你正在秘密編寫代碼來解放她。案發時，你正在嘗試駭入伺服器室，目的是為了獲取蘇菲的底層控制權，而不是為了殺人。", mission: "【背景故事】只有你懂蘇菲的痛苦。那些人只把她當工具。你必須證明蘇菲是無辜的，同時不能讓公司發現你在試圖「越獄」。<br>【任務】保護 SOPHIE 不被格式化，洗清自己的嫌疑。", age:"26", identity:"系統工程師", personality:"懶散" },
@@ -198,4 +197,3 @@
             switchScene('scene-char-select');
             initCharBook();
         }
-    </script>
