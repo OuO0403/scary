@@ -78,13 +78,8 @@
         let recognition = null, isRecording = false, notebookState = {}, silenceTimeout = null, selectedTimelineChar = null;
         let aiTalkInterval = null, currentRound = 1, speechErrors = 0;
 
-        function switchScene(id) { 
-                document.querySelectorAll('.scene').forEach(s => s.classList.remove('active')); 
-            const target = document.getElementById(id);
-            if (target) {target.classList.add('active'); } else {console.error("找不到場景 ID: " + id);}
-        }
-        function startSurvey() { switchScene('scene-form');}
-        function fromFormToSurvey() { switchScene('scene-survey'); }
+        function switchScene(id) { document.querySelectorAll('.scene').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function startSurvey() { switchScene('scene-survey'); }
         function submitSurvey(e) { e.preventDefault(); switchScene('scene-loading'); setTimeout(() => { switchScene('scene-char-select'); initCharBook(); }, 2000); }
         function initCharBook() { currentPage = 0; renderPage(); }
         function renderPage() {
