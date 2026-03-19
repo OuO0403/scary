@@ -24,6 +24,47 @@
         <button class="btn-start" onclick="startSurvey()">介入調查</button>
     </div>
 
+  <div id="scene-quiz" class="scene">
+    <div class="quiz-container">
+        <div id="quiz-setup">
+            <h2 style="color:#00d2d3;">人員適性評估 - 系統登錄</h2>
+            <div style="margin: 20px 0;">
+                <label>人員編號：</label>
+                <input type="text" id="quiz-player-id" placeholder="例如: PX-905..." style="padding:8px; background:#111; color:#00d2d3; border:1px solid #00d2d3;">
+            </div>
+            <div style="margin: 20px 0;">
+                <label>生理性別：</label>
+                <select id="quiz-gender" style="padding:8px; background:#111; color:#00d2d3; border:1px solid #00d2d3;">
+                    <option value="">請選擇...</option>
+                    <option value="M">男 (Male)</option>
+                    <option value="F">女 (Female)</option>
+                    <option value="O">其他 (Other)</option>
+                </select>
+            </div>
+            <button class="btn-start" onclick="startQuestions()" style="font-size:18px;">開始評估</button>
+        </div>
+
+        <div id="quiz-main" style="display:none; width: 100%;">
+            <div class="progress-bar"><div id="quiz-progress"></div></div>
+            <div id="quiz-content" style="min-height: 200px; margin-top: 20px;"></div>
+            <div class="quiz-footer" style="margin-top: 30px; display: flex; justify-content: space-between;">
+                <button id="btn-prev-quiz" onclick="prevQuestion()" style="background:#444; color:white; border:none; padding:10px 20px; cursor:pointer; border-radius:5px;">上一題</button>
+                <button id="btn-next-quiz" onclick="nextQuestion()" style="background:#00d2d3; color:black; border:none; padding:10px 20px; cursor:pointer; border-radius:5px; font-weight:bold;">確認並下一題</button>
+            </div>
+        </div>
+
+        <div id="quiz-ready" style="display:none; text-align:center;">
+            <h2 style="color:#ff7675;">評估完成。數據已加密上傳。</h2>
+            <p style="margin: 20px 0;">點擊下方按鈕以初始化神經連接。</p>
+            <button class="btn-start" onclick="confirmReady()" style="background:#d63031; color:white;">我準備好了，進入系統</button>
+        </div>
+    </div>
+</div>
+
+<div id="scene-alert-anim" class="scene" style="background: black;">
+    <div id="alert-subtitles" style="font-size: 32px; color: #ff2e2e; text-shadow: 0 0 10px #ff0000; font-family: 'Courier New', monospace; font-weight: bold;"></div>
+</div>
+
     <div id="scene-survey" class="scene">
         <div class="paper-sheet">
             <div style="border-bottom: 2px solid #222; margin-bottom: 20px;"><h2>外部審查官登錄</h2><small>CONFIDENTIAL ACCESS ONLY</small></div>
