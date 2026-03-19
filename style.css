@@ -1,0 +1,219 @@
+        /* =========================================
+           1. 基礎 CSS
+           ========================================= */
+        * { box-sizing: border-box; }
+        body { margin: 0; background-color: #0a0a0a; font-family: 'Courier New', Courier, monospace; color: #ddd; overflow: hidden; user-select: none; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: #00d2d3; border-radius: 3px; }
+
+        .scene { display: none; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; justify-content: center; align-items: center; flex-direction: column; z-index: 1; }
+        .scene.active { display: flex; }
+
+        /* 標題畫面 */
+        #scene-title { background: radial-gradient(circle at center, #001f3f 0%, #000000 100%); text-align: center; }
+        .glitch-title { font-size: 100px; margin: 0 0 20px 0; text-transform: uppercase; color: #00d2d3; text-shadow: 0 0 30px #00d2d3, 4px 4px 0px #fff; letter-spacing: 5px; }
+        .subtitle { font-size: 24px; color: #888; margin-bottom: 40px; letter-spacing: 8px; text-transform: uppercase; border-top: 1px solid #555; border-bottom: 1px solid #555; padding: 10px 0; }
+        .status-text { color: #aaa; font-size: 16px; margin-bottom: 60px; line-height: 1.5; }
+        .btn-start { padding: 20px 60px; background: transparent; color: #00d2d3; border: 3px solid #00d2d3; font-size: 24px; cursor: pointer; text-transform: uppercase; font-weight: bold; transition: 0.3s; box-shadow: 0 0 15px rgba(0, 210, 211, 0.3); z-index: 10; }
+        .btn-start:hover { background: #00d2d3; color: black; box-shadow: 0 0 40px #00d2d3; transform: scale(1.05); }
+
+        /* 書本與問卷 */
+        .paper-sheet { background-color: #f4f4f0; color: #222; width: 500px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transform: rotate(-1deg); position: relative; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #888; background: rgba(0,0,0,0.05); font-size: 16px; }
+        .book-container { width: 800px; height: 85vh; background-color: #f5e6d3; color: #333; position: relative; border-radius: 5px; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+        .book-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); border: 2px solid #888; font-size: 30px; cursor: pointer; color: #fff; border-radius: 50%; width: 50px; height: 50px; z-index: 100; transition: 0.3s; }
+        .book-nav:hover { background: #d63031; border-color: #d63031; }
+        .book-nav.prev { left: -80px; } .book-nav.next { right: -80px; }
+        #book-page { flex: 1; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+        .char-row { display: flex; height: 160px; border: 1px solid #c0b090; background: rgba(255,255,255,0.5); border-radius: 5px; overflow: hidden; transition: 0.2s; cursor: pointer; }
+        .char-row:hover { background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: translateX(5px); }
+        .char-left { width: 140px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px dashed #aaa; background: rgba(0,0,0,0.05); }
+        .char-left img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #555; }
+        .char-right { flex: 1; padding: 20px; display: flex; flex-direction: column; justify-content: center; text-align: left; }
+        .char-right h3 { margin: 0 0 10px 0; color: #2c3e50; }
+        .char-right p { margin: 0; font-size: 13px; color: #555; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
+        .char-detail-content { width: 80%; height: 80%; background: #fff; color: #333; display: flex; position: relative; border-radius: 10px; overflow: hidden; }
+        .btn-close-modal { position: absolute; top: 15px; right: 15px; background: #d63031; color: white; border: 2px solid white; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 200; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .detail-left { width: 40%; background: #111; display: flex; justify-content: center; align-items: center; }
+        .detail-left img { width: 80%; border-radius: 10px; box-shadow: 0 0 30px rgba(255,255,255,0.2); }
+        .detail-right { width: 60%; padding: 50px; overflow-y: auto; }
+        .script-content { width: 70%; height: 80%; background: #1a1a1a; color: #00d2d3; padding: 50px; border: 2px solid #00d2d3; border-radius: 5px; overflow-y: auto; position: relative; box-shadow: 0 0 30px rgba(0, 210, 211, 0.2); }
+        .script-content h1 { border-bottom: 2px solid #00d2d3; padding-bottom: 10px; margin-top: 0; }
+        .script-content p, .script-content li { font-size: 16px; line-height: 1.8; color: #ddd; }
+        .btn-confirm-char { position: absolute; bottom: 30px; right: 30px; padding: 15px 40px; background: #d63031; color: white; font-size: 18px; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .btn-next-step { display: block; width: 100%; padding: 20px; margin-top: 30px; background: #00d2d3; color: #000; font-weight: bold; font-size: 18px; border: none; cursor: pointer; text-transform: uppercase; }
+
+        /* 遊戲 HUD */
+        #game-ui-layer { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 500; }
+        #top-left-panel { position: fixed; top: 20px; left: 20px; display: flex; flex-direction: column; gap: 10px; pointer-events: auto; }
+        .hud-box { background: rgba(0,0,0,0.8); border: 1px solid #00d2d3; padding: 8px 15px; color: #00d2d3; font-size: 18px; border-radius: 5px; display: inline-block; }
+        #timer { color: #ff7675; font-weight: bold; margin-left: 5px; }
+        .btn-shop { background: #f39c12; color: #000; border: 1px solid #fff; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; }
+        #btn-sidebar { position: fixed; top: 20px; right: 140px; background: #00d2d3; color: black; padding: 10px 20px; border: 2px solid white; cursor: pointer; font-weight: bold; pointer-events: auto; z-index: 2000; border-radius: 5px; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+        .look-arrow { position: fixed; top: 50%; transform: translateY(-50%); font-size: 60px; color: rgba(255,255,255,0.3); cursor: pointer; pointer-events: auto; transition: 0.2s; display: none; }
+        .look-arrow:hover { color: #00d2d3; transform: translateY(-50%) scale(1.1); }
+        .look-left { left: 30px; } .look-right { right: 30px; }
+        .btn-map { position: fixed; bottom: 20px; left: 20px; background: #0984e3; color: white; padding: 10px 25px; border: 2px solid white; cursor: pointer; font-weight: bold; pointer-events: auto; z-index: 600; border-radius: 5px; }
+        .btn-meeting { position: fixed; bottom: 20px; right: 20px; background: #d63031; color: white; padding: 10px 25px; border: 2px solid white; cursor: pointer; font-weight: bold; pointer-events: auto; z-index: 600; border-radius: 5px; }
+        .round-display { color: #00d2d3; font-weight: bold; border-left: 3px solid #00d2d3; padding-left: 10px; margin-bottom: 5px; font-size: 20px; text-shadow: 0 0 10px #00d2d3; }
+
+        /* 背包 (固定在底部，Z-Index 設高) */
+        #inventory-bar { 
+            display: none; 
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); 
+            height: 100px; background: rgba(0,0,0,0.95); border: 2px solid #444; border-bottom: none; 
+            align-items: center; padding: 0 20px; border-radius: 15px 15px 0 0; 
+            z-index: 2000; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+        .inv-slot { width: 70px; height: 70px; background: #222; border: 2px solid #555; margin: 0 5px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; transition: 0.2s; pointer-events: auto; }
+        .inv-slot:hover { border-color: #fff; transform: translateY(-5px); }
+        .inv-slot.unlocked { border-color: #00b894; box-shadow: 0 0 10px #00b894; }
+        .inv-slot img { max-width: 90%; max-height: 90%; pointer-events: none; }
+
+        /* 遊戲舞台 */
+        #game-stage { position: relative; width: 100vw; height: 100vh; background-size: cover; background-position: center; transition: background-image 0.5s; box-shadow: inset 0 0 150px rgba(0,0,0,0.9); }
+        .hotspot { position: absolute; cursor: pointer; z-index: 10; background: rgba(255,255,255,0.1); border: 1px dashed rgba(255,255,255,0.3); }
+        .hotspot:hover { box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); background: rgba(255,255,255,0.2); }
+        .hotspot.collected { border: 2px solid #00b894; background: rgba(0, 184, 148, 0.3); opacity: 0.5; }
+
+        /* 側邊欄 */
+        #sidebar-panel { position: fixed; top: 0; right: -450px; width: 450px; height: 100%; background: rgba(10, 10, 10, 0.95); border-left: 2px solid #00d2d3; transition: 0.3s; z-index: 3000; padding: 20px; box-sizing: border-box; overflow-y: auto; pointer-events: auto; }
+        #sidebar-panel.open { right: 0; }
+        .sidebar-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 10px; }
+        .tab-btn { background: #333; color: #aaa; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px 5px 0 0; }
+        .tab-btn.active { background: #00d2d3; color: black; }
+        .tab-content { display: none; color: #ddd; line-height: 1.6; } .tab-content.active { display: block; }
+        .close-sidebar { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #555; font-size: 20px; cursor: pointer; }
+        .shop-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ddd; }
+        .btn-buy { background: #f39c12; border: none; padding: 5px 10px; cursor: pointer; color: black; font-weight: bold; } .btn-buy:disabled { background: #ccc; cursor: not-allowed; }
+        
+        /* 地圖視窗 */
+        #map-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; }
+        .map-content { 
+            width: 800px; height: 500px; 
+            background-color: #1a1a1a;
+            background-image: linear-gradient(rgba(0, 210, 211, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 210, 211, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: relative; border: 4px solid #00d2d3; box-shadow: 0 0 50px #00d2d3; 
+        }
+        .map-room { 
+            position: absolute; background: rgba(0,0,0,0.6); 
+            border: 2px solid #888; color: #00d2d3; 
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            cursor: pointer; transition: 0.3s; 
+            font-size: 14px; text-align: center; font-weight: bold; padding: 5px; 
+        }
+        .map-room:hover { background: rgba(0, 210, 211, 0.3); border-color: #00d2d3; box-shadow: 0 0 15px #00d2d3; }
+        .map-room.locked { background: rgba(50, 50, 50, 0.8); border-color: #444; color: #666; cursor: not-allowed; pointer-events: none; }
+        .lock-icon { font-size: 20px; margin-bottom: 5px; }
+
+        #message-box { position: fixed; top: 15%; left: 50%; transform: translateX(-50%); background: rgba(214, 48, 49, 0.9); color: white; padding: 15px 40px; border-radius: 5px; display: none; z-index: 10000; font-size: 18px; border: 2px solid white; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+
+        /* 討論室 CSS */
+        #discussion-scene { display: none; width: 100vw; height: 100vh; background: #111; color: white; position: fixed; top: 0; left: 0; z-index: 600; flex-direction: row; }
+        #discussion-scene.active { display: flex; }
+        
+        .notebook-panel { 
+            width: 450px; height: 100%; background: #222; border-right: 2px solid #444; 
+            display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; 
+            transition: width 0.5s ease;
+        }
+        #discussion-scene.listening-mode .notebook-panel { width: 60%; }
+
+        .nb-tabs { display: flex; gap: 10px; margin-bottom: 20px; } 
+        .nb-tab { flex: 1; padding: 10px; background: #333; border: none; color: #888; cursor: pointer; font-size: 16px; font-weight: bold; } 
+        .nb-tab.active { background: #00d2d3; color: black; }
+        .nb-content { flex: 1; overflow-y: auto; display: none; } .nb-content.active { display: block; }
+        
+        .char-selector { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; border-bottom: 1px solid #444; margin-bottom: 15px;}
+        .char-wrapper { display: flex; flex-direction: column; align-items: center; width: 80px; flex-shrink: 0; cursor: pointer; transition: 0.2s; opacity: 0.5; }
+        .char-wrapper.selected { opacity: 1; transform: scale(1.1); }
+        .char-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #555; object-fit: cover; } 
+        .char-wrapper.selected .char-avatar { border-color: #00d2d3; box-shadow: 0 0 10px #00d2d3; }
+        .char-name-label { font-size: 12px; margin-top: 5px; color: #aaa; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+        
+        .nb-info-box { 
+            background: #2d3436; padding: 10px; border-radius: 5px; 
+            border: 1px solid #555; margin-bottom: 10px; display: none; 
+            font-size: 13px; color: #ddd; line-height: 1.5;
+        }
+        .nb-info-box strong { color: #00d2d3; font-size: 14px; }
+        
+        .evidence-box { border: 3px dashed #666; min-height: 250px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 20px; color: #888; text-align: center; margin-top: 10px; }
+        .nb-item { display: flex; align-items: flex-start; background: #333; margin-bottom: 8px; padding: 8px; border-radius: 5px; text-align: left; } 
+        .nb-item img { width: 40px; height: 40px; margin-right: 10px; flex-shrink: 0; } 
+        .nb-text strong { display: block; color: #00d2d3; font-size: 14px; margin-bottom: 3px; }
+        .nb-text small { font-size: 12px; color: #bbb; line-height: 1.4; display: block;}
+        
+        .timeline-entry { background: #333; padding: 10px; margin-bottom: 10px; border-radius: 5px; display: flex; align-items: center; gap: 10px; } 
+        .timeline-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #888; }
+        .timeline-inputs { flex: 1; }
+        .timeline-input { width: 100%; background: #111; border: 1px solid #555; color: white; margin-bottom: 5px; padding: 5px; box-sizing: border-box;}
+        
+        .dashboard-panel { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding-bottom: 100px; transition: 0.3s; }
+        #discussion-scene.listening-mode .dashboard-panel { display: none; }
+
+        .discussion-timer-display { font-size: 40px; color: #ff7675; margin-bottom: 20px; font-weight: bold; font-family: monospace; text-shadow: 0 0 10px rgba(255, 118, 117, 0.5); }
+        .speedometer { width: 300px; height: 150px; background: linear-gradient(to right, #00b894 0%, #f1c40f 50%, #d63031 100%); border-top-left-radius: 150px; border-top-right-radius: 150px; position: relative; margin-bottom: 20px; overflow: hidden; opacity: 0.3; transition: 0.3s; }
+        .speedometer.active { opacity: 1; box-shadow: 0 0 50px rgba(0, 210, 211, 0.3); }
+        .needle { width: 4px; height: 140px; background: white; position: absolute; bottom: 0; left: 50%; transform-origin: bottom center; transform: rotate(-90deg); transition: transform 0.2s; z-index: 10; }
+        .transcription-box { width: 80%; height: 150px; background: rgba(0,0,0,0.5); border: 2px solid #444; border-radius: 10px; padding: 20px; overflow-y: auto; color: #00d2d3; font-size: 18px; text-align: center; }
+        .status-label { margin-top: 10px; font-size: 14px; color: #888; }
+        
+        /* AI 發言區域 */
+        .ai-speaking-stage { display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 100px; }
+        #discussion-scene.listening-mode .ai-speaking-stage { display: flex; }
+
+        .ai-avatar-display { width: 250px; height: 250px; border-radius: 50%; border: 8px solid #333; object-fit: cover; opacity: 0.3; transition: 0.3s; }
+        .ai-avatar-display.speaking { opacity: 1; border-color: #00d2d3; box-shadow: 0 0 50px #00d2d3, 0 0 100px rgba(0, 210, 211, 0.5); transform: scale(1.1); }
+        .ai-name-display { font-size: 30px; margin-top: 20px; color: #00d2d3; font-weight: bold; opacity: 0; transition: 0.3s; }
+        .ai-avatar-display.speaking + .ai-name-display { opacity: 1; }
+
+        .controls-panel { width: 120px; height: 100%; background: #222; border-left: 2px solid #444; display: flex; flex-direction: column; align-items: center; padding-top: 20px; gap: 20px; }
+        .ctrl-btn { width: 80px; height: 80px; border-radius: 50%; border: none; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 14px; transition: 0.3s; font-weight: bold; }
+        .btn-mic { background: #444; color: #888; font-size: 30px; } .btn-mic span { font-size: 12px; margin-top: 5px; } .btn-mic.active { background: #d63031; color: white; box-shadow: 0 0 20px #d63031; }
+        .btn-cart { background: #f39c12; color: black; font-size: 24px; }
+        
+        .btn-finish { background: #00b894; color: black; font-size: 24px; margin-top: auto; margin-bottom: 20px;} 
+        .btn-finish span { font-size: 12px; margin-top: 5px; }
+        
+        .btn-end-meeting { background: #d63031; color: white; font-size: 24px; margin-top: auto; margin-bottom: 20px; display: none; }
+        .btn-end-meeting span { font-size: 12px; margin-top: 5px; }
+
+        #discussion-scene.listening-mode .btn-mic { display: none; }
+        #discussion-scene.listening-mode .btn-finish { display: none; }
+        #discussion-scene.listening-mode .btn-end-meeting { display: flex; }
+
+        #afk-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center; color: white; flex-direction: column; }
+        #afk-overlay.active { display: flex; }
+        .afk-text { font-size: 40px; color: #d63031; margin-bottom: 20px; animation: blink 1s infinite; }
+        .btn-resume { padding: 15px 40px; font-size: 20px; background: #00d2d3; border: none; cursor: pointer; font-weight: bold; }
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* 投票介面 */
+        #scene-voting { background: #111; text-align: center; }
+        .voting-grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; max-width: 900px; margin-top: 30px; }
+        .vote-card { width: 150px; background: #222; border: 2px solid #444; border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; }
+        .vote-card:hover { border-color: #d63031; transform: translateY(-10px); box-shadow: 0 0 20px rgba(214, 48, 49, 0.5); }
+        .vote-card img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; }
+        .vote-card h3 { color: white; font-size: 16px; margin: 0; }
+
+        /* 結局統計與按鈕 */
+        #scene-result { text-align: center; background: #000; overflow-y: auto; padding: 50px; }
+        .result-title { font-size: 60px; font-weight: bold; margin-bottom: 20px; }
+        .result-desc { font-size: 18px; color: #aaa; max-width: 800px; margin: 0 auto; line-height: 1.8; text-align: left; background: #111; padding: 30px; border: 1px solid #444; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .result-desc h2 { color: #f1c40f; border-bottom: 1px solid #444; padding-bottom: 10px; margin-top: 0; }
+        .win-title { color: #00b894; text-shadow: 0 0 20px #00b894; }
+        .lose-title { color: #d63031; text-shadow: 0 0 20px #d63031; }
+        
+        .stat-box { margin-top: 30px; border-top: 1px solid #555; padding-top: 20px; color: #ddd; font-size: 20px; }
+        .stat-box span { color: #f39c12; font-weight: bold; font-size: 24px; }
+        
+        .end-buttons { display: flex; justify-content: center; gap: 20px; margin-top: 40px; padding-bottom: 50px; }
+        .btn-secondary { padding: 15px 40px; background: #444; color: white; border: 2px solid #888; font-size: 20px; cursor: pointer; text-transform: uppercase; font-weight: bold; transition: 0.3s; }
+        .btn-secondary:hover { background: #666; border-color: white; }
