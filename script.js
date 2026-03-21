@@ -1,40 +1,29 @@
-/* =========================================
-   1. 世界觀打字機與警報邏輯
-   ========================================= */
-const worldIntroText = "西元 2084 年，人類在馬里亞納海溝 8,000 公尺深處建立了「波塞頓九號」科研站。在這座深海牢籠中，一場關於新能源的實驗引發了致命危機。首席科學家索恩博士被發現死於絕對封閉的機房內，而氧氣正隨著電力系統的崩潰急劇流失。在這鋼鐵構築的幽閉空間裡，是人工智慧的邏輯崩潰，還是人類的貪婪在強壓下扭曲變形？當最後一絲氧氣耗盡之前，找出真相是你們唯一的救贖。";
+/* === 1. 全域資源宣告 (確保只出現這一次) === */
+const bgm = new Audio('https://ouo0403.github.io/alarm/assets/MusMus-BGM-031.mp3');
+bgm.loop = true;
+bgm.volume = 0.3;
 
-function enterWorldIntro() {
-    // 進入世界觀畫面
-    switchScene('scene-world-intro');
-    
-    // 啟動警報閃爍
-    document.body.classList.add('alarm-active');
+const alertSound = new Audio('https://ouo0403.github.io/alarm/assets/8footdino_on_scratch-alarm-301729.mp3'); 
+alertSound.loop = true;
 
-    let i = 0;
-    const target = document.getElementById('world-text');
-    
-    if (!target) {
-        console.error("找不到 ID 為 'world-text' 的元素");
-        return;
-    }
+const sfx = {
+    click: new Audio('https://ouo0403.github.io/alarm/assets/click..mp3'),
+    pickup: new Audio('https://ouo0403.github.io/alarm/assets/pickup.mp3'),
+    openFile: new Audio('https://ouo0403.github.io/alarm/assets/open.mp3'),
+    sceneSwap: new Audio('https://ouo0403.github.io/alarm/assets/swish.mp3'),
+    error: new Audio('https://ouo0403.github.io/alarm/assets/error.mp3'),
+    win: new Audio('https://ouo0403.github.io/alarm/assets/win.mp3'),
+    lose: new Audio('https://ouo0403.github.io/alarm/assets/lose.mp3')
+};
 
-    target.innerHTML = "";
-
-    function typeWriter() {
-        if (i < worldIntroText.length) {
-            target.innerHTML += worldIntroText.charAt(i);
-            i++;
-            setTimeout(typeWriter, 50); 
-        } else {
-            // 文字播放完畢，停頓 2.5 秒後自動停止警報並進入登錄畫面
-            setTimeout(() => {
-                document.body.classList.remove('alarm-active');
-                switchScene('scene-survey');
-            }, 2500);
-        }
-    }
-    typeWriter();
+// 輔助播放函式
+function playSFX(audio) {
+    audio.currentTime = 0;
+    audio.play().catch(e => {}); 
 }
+
+/* === 2. 遊戲文字內容 === */
+const worldIntroText = "西元 2084 年，人類在馬里亞納海溝 8,000 公尺深處建立了「波塞頓九號」科研站。在這座深海牢籠中，一場關於新能源的實驗引發了致命危機。首席科學家索恩博士被發現死於絕對封閉的機房內，而氧氣正隨著電力系統的崩潰急劇流失。在這鋼鐵構築的幽閉空間裡，是人工智慧的邏輯崩潰，還是人類的貪婪在強壓下扭曲變形？當最後一絲氧氣耗盡之前，找出真相是你們唯一的救贖。";
 
 // 基礎場景切換函數
 function switchScene(id) { 
@@ -119,6 +108,7 @@ function submitSurvey(e) {
 function initCharBook() { currentPage = 0; renderPage(); }
 
 function renderPage() {
+    playSFX(sfx.click);
     const container = document.getElementById('book-page'); 
     if(!container) return;
     container.innerHTML = "";
@@ -155,38 +145,71 @@ function confirmCharacter() {
 
 function finishPrivateScript() { document.getElementById('private-script-modal').style.display='none'; document.getElementById('main-story-modal').style.display='flex'; }
 
-function enterGame() { document.getElementById('main-story-modal').style.display='none'; switchScene('game-stage-container'); document.getElementById('inventory-bar').style.display='flex'; document.getElementById('btn-sidebar').style.display='block'; document.getElementById('round-num').innerText=currentRound; loadScene('corridor_hub'); timeLeft=120; startTimer(); refreshInventory(); }
+function enterGame() { bgm.play().catch(e => console.warn("背景音樂播放失敗：", e)); document.getElementById('main-story-modal').style.display='none'; switchScene('game-stage-container'); document.getElementById('inventory-bar').style.display='flex'; document.getElementById('btn-sidebar').style.display='block'; document.getElementById('round-num').innerText=currentRound; loadScene('corridor_hub'); timeLeft=120; startTimer(); refreshInventory(); }
 
 function loadScene(id) { 
     const d=gameData[id]; if(!d)return; 
     if(d.reqRound && d.reqRound > currentRound) { showMsg(`🚫 此區域於第 ${d.reqRound} 回合開放`); return; }
     currentSceneId=id; document.getElementById('location-name').innerText=d.name; document.getElementById('game-ui-layer').style.display='block'; const s=document.getElementById('game-stage'); s.style.backgroundImage=d.background.includes('#')?'none':d.background; s.style.backgroundColor=d.background.includes('#')?d.background:'transparent'; s.innerHTML=''; document.querySelector('.look-left').style.display=d.left?'block':'none'; document.querySelector('.look-right').style.display=d.right?'block':'none'; 
-    d.items.forEach(i=>{ if(i.type==='item'&&i.isCoin){ if(coinCooldowns[i.id]&&Date.now()<coinCooldowns[i.id]){ setTimeout(()=>{if(currentSceneId===id)loadScene(id);},coinCooldowns[i.id]-Date.now()); return; } } 
-    const div=document.createElement('div'); div.className=i.className||'hotspot'; if(i.type==='nav')div.innerText=i.text; if(i.type==='inspectable'&&collectedItems.includes(i.id))div.classList.add('collected'); Object.assign(div.style, i.style); 
-    div.onclick=()=>{ if(i.type==='nav')loadScene(i.target); else if(i.type==='item'&&i.isCoin){ coins++; updateCoinUI(); showMsg("獲得金幣 +1"); div.style.display='none'; coinCooldowns[i.id]=Date.now()+35000; setTimeout(()=>{if(currentSceneId===id)div.style.display='block';},35000); } else if(i.type==='inspectable'){ if(collectedItems.includes(i.id))showFile(i); else openPickupModal(i, div); } else if(i.type==='special'){ showMsg(`⚠️ ${i.trigger==='sophie_alert'?'SOPHIE: 警告！':'事件觸發'}`); } }; s.appendChild(div); }); 
+    
+    d.items.forEach(i=>{ 
+        if(i.type==='item'&&i.isCoin){ 
+            if(coinCooldowns[i.id]&&Date.now()<coinCooldowns[i.id]){ 
+                setTimeout(()=>{if(currentSceneId===id)loadScene(id);},coinCooldowns[i.id]-Date.now()); return; 
+            } 
+        } 
+        
+        const div=document.createElement('div'); 
+        div.className=i.className||'hotspot'; 
+        if(i.type==='nav') div.innerText=i.text; 
+        if(i.type==='inspectable'&&collectedItems.includes(i.id)) div.classList.add('collected'); 
+        Object.assign(div.style, i.style); 
+        
+        div.onclick=()=>{ 
+            // --- 核心改動：只有導航按鈕觸發音效 ---
+            if(i.type==='nav') {
+                playSFX(sfx.sceneSwap); 
+                loadScene(i.target); 
+            } 
+            // ------------------------------------
+            else if(i.type==='item'&&i.isCoin){ 
+                playSFX(sfx.pickup); 
+                coins++; updateCoinUI(); showMsg("獲得金幣 +1"); 
+                div.style.display='none'; 
+                coinCooldowns[i.id]=Date.now()+35000; 
+                setTimeout(()=>{if(currentSceneId===id)div.style.display='block';},35000); 
+            } else if(i.type==='inspectable'){ 
+                if(collectedItems.includes(i.id)) showFile(i); 
+                else openPickupModal(i, div); 
+            } else if(i.type==='special'){ 
+                showMsg(`⚠️ ${i.trigger==='sophie_alert'?'SOPHIE: 警告！':'事件觸發'}`); 
+            } 
+        }; 
+        s.appendChild(div); 
+    }); 
 }
 
 function openPickupModal(i,d) { pendingItemData=i; pendingItemDiv=d; document.getElementById('pickup-name').innerText=i.name; document.getElementById('pickup-img').src=i.icon||""; document.getElementById('pickup-modal').style.display='flex'; }
 function cancelPickup() { document.getElementById('pickup-modal').style.display='none'; pendingItemData=null; }
-function confirmPickup() { if(!pendingItemData)return; if(collectedItemsObj.length>=maxInventory){ showMsg(`❌ 背包已滿！`); cancelPickup(); return; } showMsg(`獲得：${pendingItemData.name}`); collectedItems.push(pendingItemData.id); pendingItemData.locationFound=document.getElementById('location-name').innerText; collectedItemsObj.push(pendingItemData); refreshInventory(); if(pendingItemDiv)pendingItemDiv.classList.add('collected'); document.getElementById('pickup-modal').style.display='none'; showFile(pendingItemData); }
-function showFile(i) { document.getElementById('file-title').innerText=i.name; document.getElementById('file-location').innerText=i.locationFound?`📍 ${i.locationFound}`:""; let t=i.content; if(unlockedDetails.includes(i.id)&&i.detail)t+=`\n\n【深層分析】\n${i.detail}`; document.getElementById('file-text').innerText=t; document.getElementById('file-modal').style.display='flex'; }
+function confirmPickup() { if(!pendingItemData)return; playSFX(sfx.pickup); if(collectedItemsObj.length>=maxInventory){ showMsg(`❌ 背包已滿！`); cancelPickup(); return; } showMsg(`獲得：${pendingItemData.name}`); collectedItems.push(pendingItemData.id); pendingItemData.locationFound=document.getElementById('location-name').innerText; collectedItemsObj.push(pendingItemData); refreshInventory(); if(pendingItemDiv)pendingItemDiv.classList.add('collected'); document.getElementById('pickup-modal').style.display='none'; showFile(pendingItemData); }
+function showFile(i) { playSFX(sfx.openFile); document.getElementById('file-title').innerText=i.name; document.getElementById('file-location').innerText=i.locationFound?`📍 ${i.locationFound}`:""; let t=i.content; if(unlockedDetails.includes(i.id)&&i.detail)t+=`\n\n【深層分析】\n${i.detail}`; document.getElementById('file-text').innerText=t; document.getElementById('file-modal').style.display='flex'; }
 function refreshInventory() { const b=document.getElementById('inventory-bar'); b.innerHTML=''; for(let k=0;k<maxInventory;k++){ const s=document.createElement('div'); s.className='inv-slot'; if(k<collectedItemsObj.length){ const it=collectedItemsObj[k]; if(unlockedDetails.includes(it.id))s.classList.add('unlocked'); const img=document.createElement('img'); img.src=it.icon; s.appendChild(img); s.onclick=()=>showFileFromBag(it.id); s.draggable=true; s.ondragstart=(e)=>{e.dataTransfer.setData("itemId",it.id);}; } else { s.innerText="空"; } b.appendChild(s); } }
 function showFileFromBag(id) { const i=collectedItemsObj.find(x=>x.id===id); if(i)showFile(i); }
 function updateCoinUI() { document.getElementById('coin-display').innerText=coins; document.getElementById('shop-coin-display').innerText=coins; }
 function openShop() { const list=document.getElementById('shop-list'); list.innerHTML=""; const bagRow=document.createElement('div'); bagRow.className='shop-row'; bagRow.innerHTML=`<span>🎒 背包擴充 (+1格)</span><button class="btn-buy" onclick="expandBag(5)">5 G</button>`; list.appendChild(bagRow); collectedItemsObj.forEach(i=>{ if(i.price&&i.detail){ const un=unlockedDetails.includes(i.id); const r=document.createElement('div'); r.className='shop-row'; r.innerHTML=`<span>📄 ${i.name} 分析</span><button class="btn-buy" onclick="buyDetail('${i.id}', ${i.price})" ${un?'disabled':''}>${un?'已解鎖':i.price+' G'}</button>`; list.appendChild(r); } }); document.getElementById('shop-modal').style.display='flex'; }
-function buyDetail(id, cost) { if(coins>=cost){ coins-=cost; updateCoinUI(); unlockedDetails.push(id); showMsg("✅ 購買成功！"); openShop(); refreshInventory(); }else{ showMsg("❌ 金幣不足！"); } }
+function buyDetail(id, cost) { if(coins>=cost){ playSFX(sfx.pickup); coins-=cost; updateCoinUI(); unlockedDetails.push(id); showMsg("✅ 購買成功！"); openShop(); refreshInventory(); }else{ playSFX(sfx.error); showMsg("❌ 金幣不足！"); } }
 function expandBag(cost) { if(coins>=cost){ coins-=cost; updateCoinUI(); maxInventory++; refreshInventory(); showMsg("✅ 背包已擴充！"); }else{ showMsg("❌ 金幣不足！"); } }
 function openSidebar() { document.getElementById('sidebar-panel').classList.add('open'); } 
 function closeSidebar() { document.getElementById('sidebar-panel').classList.remove('open'); }
-function switchTab(t) { document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); if(window.event) event.target.classList.add('active'); document.getElementById('tab-'+t).classList.add('active'); }
+function switchTab(t) { playSFX(sfx.click); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); if(window.event) event.target.classList.add('active'); document.getElementById('tab-'+t).classList.add('active'); }
 function panView(d) { const c=gameData[currentSceneId]; if(d==='left'&&c.left)loadScene(c.left); if(d==='right'&&c.right)loadScene(c.right); }
 function openMap() { document.getElementById('map-modal').style.display='flex'; const rooms = document.querySelectorAll('.map-room'); rooms.forEach(r => { const onclickStr = r.getAttribute('onclick'); let targetId = onclickStr.match(/'([^']+)'/)[1]; let targetData = gameData[targetId]; r.classList.remove('locked'); let lockIcon = r.querySelector('.lock-icon'); if(lockIcon) lockIcon.style.display = 'none'; if(targetData.reqRound && targetData.reqRound > currentRound) { r.classList.add('locked'); if(lockIcon) lockIcon.style.display = 'block'; } }); } 
 function closeMap() { document.getElementById('map-modal').style.display='none'; } 
-function teleport(id) { closeMap(); loadScene(id); }
+function teleport(id) { playSFX(sfx.sceneSwap); closeMap(); loadScene(id); }
 function startTimer() { clearInterval(timerInterval); timerInterval=setInterval(()=>{ timeLeft--; let m=Math.floor(timeLeft/60), s=timeLeft%60; document.getElementById('timer').innerText=`${m<10?'0'+m:m}:${s<10?'0'+s:s}`; if(timeLeft<=0){ clearInterval(timerInterval); enterDiscussion(); } },1000); }
 function showMsg(t) { const b=document.getElementById('message-box'); b.innerText=t; b.style.display='block'; setTimeout(()=>b.style.display='none',2000); }
 
-function enterDiscussion() { clearInterval(timerInterval); document.getElementById('game-ui-layer').style.display='none'; switchScene('discussion-scene'); setupDiscussionUI(); document.getElementById('discussion-timer').innerText="05:00"; discussionTimerStarted=false; document.getElementById('inventory-bar').style.display='flex'; document.getElementById('inventory-bar').style.zIndex='2000'; document.getElementById('discussion-scene').classList.remove('listening-mode'); document.getElementById('btn-mic').classList.remove('active'); document.getElementById('btn-mic').style.display='flex'; document.getElementById('btn-finish').style.display='flex'; document.querySelector('.dashboard-panel').style.display='flex'; document.querySelector('.ai-speaking-stage').style.display='none'; document.querySelector('.btn-end-meeting').style.display='none'; }
+function enterDiscussion() { bgm.pause(); clearInterval(timerInterval); document.getElementById('game-ui-layer').style.display='none'; switchScene('discussion-scene'); setupDiscussionUI(); document.getElementById('discussion-timer').innerText="05:00"; discussionTimerStarted=false; document.getElementById('inventory-bar').style.display='flex'; document.getElementById('inventory-bar').style.zIndex='2000'; document.getElementById('discussion-scene').classList.remove('listening-mode'); document.getElementById('btn-mic').classList.remove('active'); document.getElementById('btn-mic').style.display='flex'; document.getElementById('btn-finish').style.display='flex'; document.querySelector('.dashboard-panel').style.display='flex'; document.querySelector('.ai-speaking-stage').style.display='none'; document.querySelector('.btn-end-meeting').style.display='none'; }
 function startDiscussionTimer() { clearInterval(discussionInterval); discussionTime=300; discussionInterval=setInterval(()=>{ discussionTime--; let m=Math.floor(discussionTime/60), s=discussionTime%60; document.getElementById('discussion-timer').innerText=`${m<10?'0'+m:m}:${s<10?'0'+s:s}`; if(discussionTime<=0){ clearInterval(discussionInterval); finishSpeaking(); } },1000); }
 function finishSpeaking() { if(recognition) recognition.stop(); isRecording=false; clearInterval(discussionInterval); clearInterval(silenceTimeout); document.getElementById('discussion-scene').classList.add('listening-mode'); document.getElementById('btn-mic').classList.remove('active'); document.getElementById('btn-mic').style.display='none'; document.getElementById('btn-finish').style.display='none'; document.querySelector('.dashboard-panel').style.display='none'; document.querySelector('.ai-speaking-stage').style.display='flex'; document.querySelector('.btn-end-meeting').style.display='flex'; startAIRotation(); }
 function endMeeting() { clearInterval(aiTalkInterval); if(currentRound===1){ currentRound=2; showMsg("第二回合搜查開始！"); enterGame(); }else{ switchScene('scene-voting'); setupVoting(); } }
@@ -215,6 +238,11 @@ function switchNoteTab(t){ document.querySelectorAll('.nb-tab').forEach(b=>b.cla
 function setupVoting() { const c=document.getElementById('voting-container'); c.innerHTML=""; characterData.forEach(ch=>{ const d=document.createElement('div'); d.className='vote-card'; d.innerHTML=`<img src="${ch.image}"><h3>${ch.name}</h3>`; d.onclick=()=>submitVote(ch.id); c.appendChild(d); }); }
 
 function submitVote(vid) {
+    if (bgm) {
+        bgm.pause();
+        bgm.currentTime = 0; 
+    }
+
     const winner = characterData.find(c => c.id === vid);
     const isWin = (vid === TRUE_KILLER_ID);
     switchScene('scene-result');
@@ -226,12 +254,14 @@ function submitVote(vid) {
     stats.style.display = 'block';
 
     if(isWin) {
+        playSFX(sfx.win);
         res.innerHTML = `
             <h1 class="result-title win-title">任務成功</h1>
             <p>兇手 ${winner.name} 已被流放。</p>
             <div class="result-desc">${TRUTH_STORY}</div>
         `;
     } else {
+        playSFX(sfx.lose);
         res.innerHTML = `
             <h1 class="result-title lose-title">任務失敗</h1>
             <p>你們流放了無辜的 ${winner.name}。</p>
@@ -241,19 +271,16 @@ function submitVote(vid) {
     }
 }
 
-// 1. 初始化音效物件 (建議放全域，避免重複建立)
-const alertSound = new Audio('https://ouo0403.github.io/alarm/assets/8footdino_on_scratch-alarm-301729.mp3'); 
-alertSound.loop = true; // 開啟循環播放
-
+/* === 3. 核心功能函式 === */
 function enterWorldIntro() {
-    // 重置音量與播放位置
-    alertSound.volume = 1.0; 
-    alertSound.currentTime = 0;
-    
-    // 2. 開始播放音效與動畫
-    alertSound.play().catch(e => console.warn("音訊播放受阻，請確保使用者有點擊頁面。"));
+    // 進入世界觀畫面
     switchScene('scene-world-intro');
     document.body.classList.add('alarm-active');
+
+    // 啟動音效
+    alertSound.volume = 1.0; 
+    alertSound.currentTime = 0;
+    alertSound.play().catch(e => console.warn("請先點擊頁面以播放音訊"));
 
     let i = 0;
     const target = document.getElementById('world-text');
@@ -266,25 +293,18 @@ function enterWorldIntro() {
             i++;
             setTimeout(typeWriter, 50); 
         } else {
-            // --- 文字播完，開始進入 3 秒倒數與淡出效果 ---
-            
-            // 每 200 毫秒降低一次音量，在 3 秒內降到 0
+            // 文字播完，淡出音效並跳轉
             const fadeInterval = setInterval(() => {
-                if (alertSound.volume > 0.05) {
-                    alertSound.volume -= 0.05; // 每次遞減 5%
-                } else {
-                    alertSound.volume = 0;
+                if (alertSound.volume > 0.1) alertSound.volume -= 0.1;
+                else {
+                    alertSound.pause();
                     clearInterval(fadeInterval);
                 }
-            }, 150); // 150ms * 20次 = 3000ms
+            }, 200);
 
             setTimeout(() => {
-                // 停止音效並徹底重置
-                alertSound.pause();
-                alertSound.volume = 1.0; 
-                
-                document.body.classList.remove('alarm-active'); 
-                switchScene('scene-survey'); 
+                document.body.classList.remove('alarm-active');
+                switchScene('scene-survey');
             }, 3000);
         }
     }
