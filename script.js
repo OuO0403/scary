@@ -241,12 +241,18 @@ function submitVote(vid) {
     }
 }
 
-// 請確保這一段完整存在於 script.js 中
+// 1. 初始化音效物件 (建議放全域，避免重複建立)
+const alertSound = new Audio('https://ouo0403.github.io/alarm/assets/8footdino_on_scratch-alarm-301729.mp3'); 
+alertSound.loop = true; // 開啟循環播放
+
 function enterWorldIntro() {
-    // 1. 切換畫面
-    switchScene('scene-world-intro');
+    // 重置音量與播放位置
+    alertSound.volume = 1.0; 
+    alertSound.currentTime = 0;
     
-    // 2. 讓背景動起來（CSS 裡的閃爍動畫）
+    // 2. 開始播放音效與動畫
+    alertSound.play().catch(e => console.warn("音訊播放受阻，請確保使用者有點擊頁面。"));
+    switchScene('scene-world-intro');
     document.body.classList.add('alarm-active');
 
     let i = 0;
@@ -258,12 +264,27 @@ function enterWorldIntro() {
         if (i < worldIntroText.length) {
             target.innerHTML += worldIntroText.charAt(i);
             i++;
-            setTimeout(typeWriter, 50); // 文字速度
+            setTimeout(typeWriter, 50); 
         } else {
-            // 3. 文字播完後，等 3.0 秒進入選角
+            // --- 文字播完，開始進入 3 秒倒數與淡出效果 ---
+            
+            // 每 200 毫秒降低一次音量，在 3 秒內降到 0
+            const fadeInterval = setInterval(() => {
+                if (alertSound.volume > 0.05) {
+                    alertSound.volume -= 0.05; // 每次遞減 5%
+                } else {
+                    alertSound.volume = 0;
+                    clearInterval(fadeInterval);
+                }
+            }, 150); // 150ms * 20次 = 3000ms
+
             setTimeout(() => {
-                document.body.classList.remove('alarm-active'); // 停止閃爍
-                switchScene('scene-survey'); // 進入代號登錄
+                // 停止音效並徹底重置
+                alertSound.pause();
+                alertSound.volume = 1.0; 
+                
+                document.body.classList.remove('alarm-active'); 
+                switchScene('scene-survey'); 
             }, 3000);
         }
     }
