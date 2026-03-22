@@ -1,19 +1,19 @@
 /* === 1. 全域資源宣告 (確保只出現這一次) === */
-const bgm = new Audio('https://ouo0403.github.io/alarm/assets/MusMus-BGM-031.mp3');
+const bgm = new Audio('https://ouo0403.github.io/oneplusone/assets/MusMus-BGM-031.mp3');
 bgm.loop = true;
 bgm.volume = 0.3;
 
-const alertSound = new Audio('https://ouo0403.github.io/alarm/assets/8footdino_on_scratch-alarm-301729.mp3'); 
+const alertSound = new Audio('https://ouo0403.github.io/oneplusone/assets/8footdino_on_scratch-alarm-301729.mp3'); 
 alertSound.loop = true;
 
 const sfx = {
-    click: new Audio('https://ouo0403.github.io/alarm/assets/click..mp3'),
-    pickup: new Audio('https://ouo0403.github.io/alarm/assets/pickup.mp3'),
-    openFile: new Audio('https://ouo0403.github.io/alarm/assets/open.mp3'),
-    sceneSwap: new Audio('https://ouo0403.github.io/alarm/assets/swish.mp3'),
-    error: new Audio('https://ouo0403.github.io/alarm/assets/error.mp3'),
-    win: new Audio('https://ouo0403.github.io/alarm/assets/win.mp3'),
-    lose: new Audio('https://ouo0403.github.io/alarm/assets/lose.mp3')
+    click: new Audio('https://ouo0403.github.io/oneplusone/assets/click..mp3'),
+    pickup: new Audio('https://ouo0403.github.io/oneplusone/assets/pickup.mp3'),
+    openFile: new Audio('https://ouo0403.github.io/oneplusone/assets/open.mp3'),
+    sceneSwap: new Audio('https://ouo0403.github.io/oneplusone/assets/swish.mp3'),
+    error: new Audio('https://ouo0403.github.io/oneplusone/assets/error.mp3'),
+    win: new Audio('https://ouo0403.github.io/oneplusone/assets/win.mp3'),
+    lose: new Audio('https://ouo0403.github.io/oneplusone/assets/lose.mp3')
 };
 
 // 輔助播放函式
@@ -311,7 +311,25 @@ function enterWorldIntro() {
     typeWriter();
 }
 
-function returnToHome() { location.reload(); }
+function goToNextTheme() {
+    // 1. 播放點擊音效
+    if (sfx.click) sfx.click.play();
+    
+    // 2. 更改按鈕文字，給玩家一個「正在載入」的視覺反饋
+    const btn = event.target; // 取得被點擊的按鈕
+    btn.innerText = "系統傳輸中... 請稍候";
+    btn.style.opacity = "0.7";
+    btn.disabled = true; // 防止重複點擊
+
+    // 3. 設定停留時間 (例如 3000 毫秒 = 3 秒)
+    console.log("開始計時，3秒後跳轉...");
+    
+    setTimeout(() => {
+        // 請確保這裡的檔案名稱與你的新劇本 HTML 一致
+        window.location.href = 'index_theme2.html'; 
+    }, 3000); 
+}
+
 function returnToCharSelect() {
     currentPage=0; selectedCharId=null; collectedItems=[]; collectedItemsObj=[]; unlockedDetails=[]; coinCooldowns={}; currentSceneId="corridor_hub";
     timeLeft=120; coins=0; maxInventory=5; notebookState={}; speechErrors=0; currentRound=1;
@@ -322,3 +340,4 @@ function returnToCharSelect() {
     switchScene('scene-char-select');
     initCharBook();
 }
+
