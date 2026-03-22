@@ -2,30 +2,30 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>POSEIDON-9: 深海科研站</title>
-    <link rel="stylesheet" href="style.css">
+    <title>聖德中學：致曉夢的安魂曲</title>
+    <link rel="stylesheet" href="style_theme2.css">
 </head>
 <body id="main-body">
 
     <div id="scene-world-intro" class="scene">
         <div class="world-box">
-            <div class="world-title">SYSTEM ALERT: EMERGENCY LOG</div>
+            <div class="world-title">校警室紀錄：封鎖區域警報</div>
             <div id="world-text"></div>
         </div>
     </div>
 
     <div id="scene-title" class="scene active">
-        <h1 class="glitch-title">POSEIDON-9</h1>
-        <div class="subtitle">深海科研站：波塞頓九號</div>
-        <p class="status-text">深度: -8000m | 氧氣: 12H | 狀態: <span style="color:red; animation: blink 1s infinite;">紅色警報</span></p>
+        <h1 class="glitch-title">私立聖德中學</h1>
+        <div class="subtitle">禁忌地帶：舊教學大樓</div>
+        <p class="status-text">年份: 2026 深秋 | 距離真相: 12H | 狀態: <span style="color:rgb(255, 0, 0); animation: blink 1s infinite;">大樓已封鎖</span></p>
         <button class="btn-start" onclick="enterWorldIntro()">介入調查</button>
     </div>
 
     <div id="message-box">提示訊息</div>
     
     <div id="afk-overlay">
-        <div class="afk-text">⚠️ 訊號中斷：請問您還在線嗎？</div>
-        <button class="btn-resume" onclick="resumeFromAFK()">恢復連線</button>
+        <div class="afk-text">⚠️ 意識中斷：你是否仍在迷霧中？</div>
+        <button class="btn-resume" onclick="resumeFromAFK()">恢復連結</button>
     </div>
 
     <div id="inventory-bar"></div>
@@ -33,19 +33,19 @@
 
     <div id="scene-survey" class="scene">
         <div class="paper-sheet">
-            <div style="border-bottom: 2px solid #222; margin-bottom: 20px;"><h2>外部審查官登錄</h2><small>CONFIDENTIAL ACCESS ONLY</small></div>
+            <div style="border-bottom: 2px solid #222; margin-bottom: 20px;"><h2>重返者登錄</h2><small>RESTRICTED AREA: CLASSROOMS ONLY</small></div>
             <form onsubmit="submitSurvey(event)">
                 <div style="margin-bottom: 20px; text-align: left;">
-                    <label>代號 (CODENAME):</label>
-                    <input type="text" id="input-name" placeholder="輸入代號..." required autocomplete="off">
+                    <label>受邀者代號 (CODENAME):</label>
+                    <input type="text" id="input-name" placeholder="輸入你的姓名..." required autocomplete="off">
                 </div>
-                <button type="submit" class="btn-start" style="width:100%; background:#222; color:white; font-size:16px; border:none;">連接神經網路</button>
+                <button type="submit" class="btn-start" style="width:100%; background:#620000; color:rgb(222, 120, 120); font-size:16px; border:none;">啟動深層回憶</button>
             </form>
         </div>
     </div>
 
     <div id="scene-loading" class="scene">
-        <div style="font-size: 24px; color: #fff;">正在下載人員檔案...</div>
+        <div style="font-size: 24px; color: #fff;">正在調閱師生檔案...</div>
         <p id="player-greeting" style="color: #888; margin-top: 20px;"></p>
     </div>
 
@@ -76,24 +76,24 @@
 
     <div id="private-script-modal" class="modal-overlay">
         <div class="script-content">
-            <h1 style="color:#ff7675;">TOP SECRET // 個人機密檔案</h1>
+            <h1 style="color:#ff7675;">RESTRICTED // 聖德中學學生處私密檔案</h1>
             <h2 id="private-role-name"></h2><hr style="border-color:#555;">
-            <h3>【你的秘密與過去】</h3><p id="private-full-story"></p>
-            <h3>【本次任務目標】</h3><p id="private-mission"></p>
-            <button class="btn-next-step" onclick="finishPrivateScript()">銷毀檔案並進入主線</button>
+            <h3>【隱藏的過往與罪疚】</h3><p id="private-full-story"></p>
+            <h3>【今晚的最終目標】</h3><p id="private-mission"></p>
+            <button class="btn-next-step" onclick="finishPrivateScript()">闔上檔案並重返舊大樓</button>
         </div>
     </div>
 
     <div id="main-story-modal" class="modal-overlay">
         <div class="script-content">
-            <h1>SYSTEM ALERT: RED LEVEL</h1>
-            <p><strong>時間：</strong>西元 2084 年 | <strong>地點：</strong>馬里亞納海溝 -8000m (波塞頓九號)</p>
+            <h1>舊教學大樓：禁忌調查紀錄</h1>
+            <p><strong>時間：</strong>2026 年 深秋 | <strong>地點：</strong>私立聖德中學 - 封鎖三年的舊大樓</p>
             <hr>
-            <h3>【起始事件】</h3>
+            <h3>【起始事件：林曉夢失蹤案】</h3>
             <ul>
-                <li><strong>20:00</strong> - 科研站剛完成「深淵之心」實驗，突發紅色警報，中央伺服器室封鎖。</li>
-                <li><strong>20:15</strong> - 眾人強行破門，發現首席科學家 <strong>Dr. Aris Thorne</strong> 倒斃於控制台前，死狀痛苦。</li>
-                <li><strong>現況</strong> - 房間呈現完全密室狀態。深海風暴導致通訊中斷，備用氧氣僅剩 12 小時。</li>
+                <li><strong>三個月前</strong> - 天才鋼琴少女林曉夢在校慶預演中離奇消失，現場僅遺落一隻滲血的芭蕾舞鞋。</li>
+                <li><strong>今晚 20:00</strong> - 五位師生受神祕信件指引重返禁地。隨著沉重的鐵門落下，大樓出口已被鎖死。</li>
+                <li><strong>現況</strong> - 腐朽木香與刺鼻藥味交織。牆面血痕漸現，鋼琴聲若隱若現。今晚真相若不見光，誰也無法離開這棟被詛咒的大樓。</li>
             </ul>
             <button class="btn-next-step" onclick="enterGame()">開始搜查 (限時 2 分鐘)</button>
         </div>
@@ -123,7 +123,7 @@
                 <div style="font-size:12px; color:#888; margin-bottom:5px;">1. 選擇嫌疑人</div>
                 <div class="char-selector" id="nb-char-list"></div>
                 <div id="nb-selected-info" class="nb-info-box"></div>
-                <div style="font-size:12px; color:#888; margin:10px 0 5px;">2. 拖曳背包證物至此</div>
+                <div style="font-size:12px; color:#888; margin:10px 0 5px;">2. 拖曳證物至此</div>
                 <div id="evidence-drop-zone" class="evidence-box">請先選擇上方角色</div>
             </div>
             <div id="nb-timeline" class="nb-content">
@@ -155,8 +155,8 @@
     </div>
 
     <div id="scene-voting" class="scene">
-        <h1 style="color:#d63031; text-transform: uppercase;">⚠️ 最終投票 ⚠️</h1>
-        <p style="color:#aaa; margin-bottom: 30px;">請選擇你認為的真兇 (票數最高者將被流放)</p>
+        <h1 style="color:#d63031; text-transform: uppercase;">⚠️ 真相審判：誰毀了林曉夢？ ⚠️</h1>
+        <p style="color:#aaa; margin-bottom: 30px;">根據目前的案卷與證物，請指出隱藏在琴聲背後的真兇（指控票數最高者將接受真相的審判）</p>
         <div id="voting-container" class="voting-grid"></div>
     </div>
 
@@ -189,9 +189,9 @@
         </div>
         <div id="tab-role" class="tab-content"></div>
         <div id="tab-story" class="tab-content">
-            <p>20:00 紅色警報，密室封鎖。</p>
-            <p>20:15 發現屍體。</p>
-            <p>通訊中斷，全員嫌疑。</p>
+            <p>三個月前：天才鋼琴少女林曉夢離奇消失，現場遺落滲血舞鞋。</p>
+            <p>今晚 20:00：五位師生受神祕信件指引重返禁地，大樓出口隨之鎖死。</p>
+            <p>現況：牆面血痕漸現，鋼琴聲若隱若現。今晚真相若不見光，誰也無法離開。</p>
         </div>
     </div>
 
@@ -227,63 +227,99 @@
             <p style="color:red; font-size:12px; margin-top:20px;">[系統] 已收錄至證物袋。</p>
         </div>
     </div>
+    
+    <div id="item-detail-modal" class="modal" style="display:none;">
+    <div class="modal-content campus-case-file">
+        <div class="case-header">
+            <span class="case-tag">CONFIDENTIAL</span>
+            <h2 id="item-modal-title">證物名稱</h2>
+        </div>
+        <hr>
+        <div class="observation-box">
+            <h4>【初見面向 / Base Observation】</h4>
+            <p id="item-modal-base"></p>
+        </div>
+        
+        <div id="item-modal-deep-section" class="deep-truth-box" style="display:none;">
+            </div>
 
-    <div id="map-modal">
+        <div class="modal-footer">
+            <button id="item-modal-unlock-btn" class="btn-unlock">消耗 2 枚碎片解鎖深度解析</button>
+            <button class="btn-close" onclick="document.getElementById('item-detail-modal').style.display='none'">闔上檔案</button>
+        </div>
+    </div>
+</div>
+
+<div id="map-modal">
         <div class="map-content">
             <button onclick="closeMap()" style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; padding:5px 10px; cursor:pointer;">關閉</button>
-            <h2 style="color:#00d2d3; text-align:center; margin-top:20px;">POSEIDON-9 結構圖</h2>
-            <div class="map-room" style="top:10%; left:35%; width:30%; height:20%;" onclick="teleport('server_room_front')">中央伺服器室<br>(案發)</div>
-            <div class="map-room" style="top:40%; left:10%; width:20%; height:20%;" onclick="teleport('security_hub_front')">安保監控室<div class="lock-icon">🔒</div></div>
-            <div class="map-room" style="top:40%; right:10%; width:20%; height:20%;" onclick="teleport('directors_office_front')">總監辦公室<div class="lock-icon">🔒</div></div>
-            <div class="map-room" style="top:70%; left:10%; width:20%; height:20%;" onclick="teleport('engineering_front')">維修工程區</div>
-            <div class="map-room" style="top:70%; right:10%; width:20%; height:20%;" onclick="teleport('living_quarters_front')">船員休息區</div>
-            <div class="map-room" style="top:70%; left:35%; width:30%; height:20%;" onclick="teleport('storage_front')">氣體儲藏區<div class="lock-icon">🔒</div></div>
+            <h2 style="color:#ff7675; text-align:center; margin-top:20px;">聖德中學舊大樓：禁區平面圖</h2>
+            
+            <div class="map-room" style="top:15%; left:10%; width:35%; height:25%;" onclick="teleport('S1')">
+                音樂教室<br><small style="font-size:10px;">(染血的三角鋼琴)</small>
+            </div>
+            
+            <div class="map-room" style="top:15%; right:10%; width:35%; height:25%;" onclick="teleport('S2')">
+                女生宿舍 302 室<br><small style="font-size:10px;">(濃郁香水味)</small>
+            </div>
+            
+            <div class="map-room" style="top:55%; left:10%; width:35%; height:25%;" onclick="teleport('S3')">
+                舊大樓儲藏室<br><small style="font-size:10px;">(暗門結構)</small>
+            </div>
+            
+            <div class="map-room" style="top:55%; right:10%; width:35%; height:25%;" onclick="teleport('S4')">
+                校長辦公室/學生會室<br><small style="font-size:10px;">(監控與秘密)</small>
+            </div>
+
+            <div style="position:absolute; bottom:20px; width:100%; text-align:center; color:#888; font-size:12px;">
+                * 點擊區域進行深度搜查 *
+            </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script_theme2.js"></script>
 </body>
 </html><!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>POSEIDON-9: 深海科研站</title>
-    <link rel="stylesheet" href="style.css">
+    <title>聖德中學：致曉夢的安魂曲</title>
+    <link rel="stylesheet" href="style_theme2.css">
 </head>
 <body>
 
     <div id="message-box">提示訊息</div>
     
     <div id="afk-overlay">
-        <div class="afk-text">⚠️ 訊號中斷：請問您還在線嗎？</div>
-        <button class="btn-resume" onclick="resumeFromAFK()">恢復連線</button>
+        <div class="afk-text">⚠️ 意識中斷：你是否仍在迷霧中？</div>
+        <button class="btn-resume" onclick="resumeFromAFK()">恢復連結</button>
     </div>
 
     <div id="inventory-bar"></div>
     <button id="btn-sidebar" onclick="openSidebar()">📋 檔案</button>
 
     <div id="scene-title" class="scene active">
-        <h1 class="glitch-title">POSEIDON-9</h1>
-        <div class="subtitle">深海科研站：波塞頓九號</div>
-        <p class="status-text">深度: -8000m | 氧氣: 12H | 狀態: <span style="color:red; animation: blink 1s infinite;">紅色警報</span></p>
+        <h1 class="glitch-title">私立聖德中學</h1>
+        <div class="subtitle">禁忌地帶：舊教學大樓</div>
+        <p class="status-text">年份: 2026 深秋 | 距離真相: 12H | 狀態: <span style="color:rgb(255, 0, 0); animation: blink 1s infinite;">大樓已封鎖</span></p>
         <button class="btn-start" onclick="enterWorldIntro()">介入調查</button>
     </div>
 
     <div id="scene-survey" class="scene">
         <div class="paper-sheet">
-            <div style="border-bottom: 2px solid #222; margin-bottom: 20px;"><h2>外部審查官登錄</h2><small>CONFIDENTIAL ACCESS ONLY</small></div>
+            <div style="border-bottom: 2px solid #222; margin-bottom: 20px;"><h2>重返者登錄</h2><small>RESTRICTED AREA: CLASSROOMS ONLY</small></div>
             <form onsubmit="submitSurvey(event)">
                 <div style="margin-bottom: 20px; text-align: left;">
-                    <label>代號 (CODENAME):</label>
-                    <input type="text" id="input-name" placeholder="輸入代號..." required autocomplete="off">
+                    <label>受邀者代號 (CODENAME):</label>
+                    <input type="text" id="input-name" placeholder="輸入你的姓名..." required autocomplete="off">
                 </div>
-                <button type="submit" class="btn-start" style="width:100%; background:#222; color:white; font-size:16px; border:none;">連接神經網路</button>
+                <button type="submit" class="btn-start" style="width:100%; background:#620000; color:rgb(222, 120, 120); font-size:16px; border:none;">啟動深層回憶</button>
             </form>
         </div>
     </div>
 
     <div id="scene-loading" class="scene">
-        <div style="font-size: 24px; color: #fff;">正在下載人員檔案...</div>
+        <div style="font-size: 24px; color: #fff;">正在調閱師生檔案...</div>
         <p id="player-greeting" style="color: #888; margin-top: 20px;"></p>
     </div>
 
@@ -314,24 +350,24 @@
 
     <div id="private-script-modal" class="modal-overlay">
         <div class="script-content">
-            <h1 style="color:#ff7675;">TOP SECRET // 個人機密檔案</h1>
+            <h1 style="color:#ff7675;">RESTRICTED // 聖德中學學生處私密檔案</h1>
             <h2 id="private-role-name"></h2><hr style="border-color:#555;">
-            <h3>【你的秘密與過去】</h3><p id="private-full-story"></p>
-            <h3>【本次任務目標】</h3><p id="private-mission"></p>
-            <button class="btn-next-step" onclick="finishPrivateScript()">銷毀檔案並進入主線</button>
+            <h3>【隱藏的過往與罪疚】</h3><p id="private-full-story"></p>
+            <h3>【今晚的最終目標】</h3><p id="private-mission"></p>
+            <button class="btn-next-step" onclick="finishPrivateScript()">闔上檔案並重返舊大樓</button>
         </div>
     </div>
 
     <div id="main-story-modal" class="modal-overlay">
         <div class="script-content">
-            <h1>SYSTEM ALERT: RED LEVEL</h1>
-            <p><strong>時間：</strong>西元 2084 年 | <strong>地點：</strong>馬里亞納海溝 -8000m (波塞頓九號)</p>
+            <h1>舊教學大樓：禁忌調查紀錄</h1>
+            <p><strong>時間：</strong>2026 年 深秋 | <strong>地點：</strong>私立聖德中學 - 封鎖三年的舊大樓</p>
             <hr>
-            <h3>【起始事件】</h3>
+            <h3>【起始事件：林曉夢失蹤案】</h3>
             <ul>
-                <li><strong>20:00</strong> - 科研站剛完成「深淵之心」實驗，突發紅色警報，中央伺服器室封鎖。</li>
-                <li><strong>20:15</strong> - 眾人強行破門，發現首席科學家 <strong>Dr. Aris Thorne</strong> 倒斃於控制台前，死狀痛苦。</li>
-                <li><strong>現況</strong> - 房間呈現完全密室狀態。深海風暴導致通訊中斷，備用氧氣僅剩 12 小時。</li>
+                <li><strong>三個月前</strong> - 天才鋼琴少女林曉夢在校慶預演中離奇消失，現場僅遺落一隻滲血的芭蕾舞鞋。</li>
+                <li><strong>今晚 20:00</strong> - 五位師生受神祕信件指引重返禁地。隨著沉重的鐵門落下，大樓出口已被鎖死。</li>
+                <li><strong>現況</strong> - 腐朽木香與刺鼻藥味交織。牆面血痕漸現，鋼琴聲若隱若現。今晚真相若不見光，誰也無法離開這棟被詛咒的大樓。</li>
             </ul>
             <button class="btn-next-step" onclick="enterGame()">開始搜查 (限時 2 分鐘)</button>
         </div>
@@ -361,7 +397,7 @@
                 <div style="font-size:12px; color:#888; margin-bottom:5px;">1. 選擇嫌疑人</div>
                 <div class="char-selector" id="nb-char-list"></div>
                 <div id="nb-selected-info" class="nb-info-box"></div>
-                <div style="font-size:12px; color:#888; margin:10px 0 5px;">2. 拖曳背包證物至此</div>
+                <div style="font-size:12px; color:#888; margin:10px 0 5px;">2. 拖曳證物至此</div>
                 <div id="evidence-drop-zone" class="evidence-box">請先選擇上方角色</div>
             </div>
             <div id="nb-timeline" class="nb-content">
@@ -393,8 +429,8 @@
     </div>
 
     <div id="scene-voting" class="scene">
-        <h1 style="color:#d63031; text-transform: uppercase;">⚠️ 最終投票 ⚠️</h1>
-        <p style="color:#aaa; margin-bottom: 30px;">請選擇你認為的真兇 (票數最高者將被流放)</p>
+        <h1 style="color:#d63031; text-transform: uppercase;">⚠️ 真相審判：誰毀了林曉夢？ ⚠️</h1>
+        <p style="color:#aaa; margin-bottom: 30px;">根據目前的案卷與證物，請指出隱藏在琴聲背後的真兇（指控票數最高者將接受真相的審判）</p>
         <div id="voting-container" class="voting-grid"></div>
     </div>
 
@@ -427,9 +463,9 @@
         </div>
         <div id="tab-role" class="tab-content"></div>
         <div id="tab-story" class="tab-content">
-            <p>20:00 紅色警報，密室封鎖。</p>
-            <p>20:15 發現屍體。</p>
-            <p>通訊中斷，全員嫌疑。</p>
+            <p>三個月前：天才鋼琴少女林曉夢離奇消失，現場遺落滲血舞鞋。</p>
+            <p>今晚 20:00：五位師生受神祕信件指引重返禁地，大樓出口隨之鎖死。</p>
+            <p>現況：牆面血痕漸現，鋼琴聲若隱若現。今晚真相若不見光，誰也無法離開。</p>
         </div>
     </div>
 
@@ -466,18 +502,55 @@
         </div>
     </div>
 
-    <div id="map-modal">
-        <div class="map-content">
-            <button onclick="closeMap()" style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; padding:5px 10px; cursor:pointer;">關閉</button>
-            <h2 style="color:#00d2d3; text-align:center; margin-top:20px;">POSEIDON-9 結構圖</h2>
-            <div class="map-room" style="top:10%; left:35%; width:30%; height:20%;" onclick="teleport('server_room_front')">中央伺服器室<br>(案發)</div>
-            <div class="map-room" style="top:40%; left:10%; width:20%; height:20%;" onclick="teleport('security_hub_front')">安保監控室<div class="lock-icon">🔒</div></div>
-            <div class="map-room" style="top:40%; right:10%; width:20%; height:20%;" onclick="teleport('directors_office_front')">總監辦公室<div class="lock-icon">🔒</div></div>
-            <div class="map-room" style="top:70%; left:10%; width:20%; height:20%;" onclick="teleport('engineering_front')">維修工程區</div>
-            <div class="map-room" style="top:70%; right:10%; width:20%; height:20%;" onclick="teleport('living_quarters_front')">船員休息區</div>
-            <div class="map-room" style="top:70%; left:35%; width:30%; height:20%;" onclick="teleport('storage_front')">氣體儲藏區<div class="lock-icon">🔒</div></div>
+    <div id="item-detail-modal" class="modal" style="display:none;">
+    <div class="modal-content campus-case-file">
+        <div class="case-header">
+            <span class="case-tag">CONFIDENTIAL</span>
+            <h2 id="item-modal-title">證物名稱</h2>
+        </div>
+        <hr>
+        <div class="observation-box">
+            <h4>【初見面向 / Base Observation】</h4>
+            <p id="item-modal-base"></p>
+        </div>
+        
+        <div id="item-modal-deep-section" class="deep-truth-box" style="display:none;">
+            </div>
+
+        <div class="modal-footer">
+            <button id="item-modal-unlock-btn" class="btn-unlock">消耗 2 枚碎片解鎖深度解析</button>
+            <button class="btn-close" onclick="document.getElementById('item-detail-modal').style.display='none'">闔上檔案</button>
         </div>
     </div>
-    <script src="script.js"></script>
+</div>
+
+<div id="map-modal">
+        <div class="map-content">
+            <button onclick="closeMap()" style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; padding:5px 10px; cursor:pointer;">關閉</button>
+            <h2 style="color:#ff7675; text-align:center; margin-top:20px;">聖德中學舊大樓：禁區平面圖</h2>
+            
+            <div class="map-room" style="top:15%; left:10%; width:35%; height:25%;" onclick="teleport('S1')">
+                音樂教室<br><small style="font-size:10px;">(染血的三角鋼琴)</small>
+            </div>
+            
+            <div class="map-room" style="top:15%; right:10%; width:35%; height:25%;" onclick="teleport('S2')">
+                女生宿舍 302 室<br><small style="font-size:10px;">(濃郁香水味)</small>
+            </div>
+            
+            <div class="map-room" style="top:55%; left:10%; width:35%; height:25%;" onclick="teleport('S3')">
+                舊大樓儲藏室<br><small style="font-size:10px;">(暗門結構)</small><div class="lock-icon">🔒</div>
+            </div>
+            
+            <div class="map-room" style="top:55%; right:10%; width:35%; height:25%;" onclick="teleport('S4')">
+                校長辦公室/學生會室<br><small style="font-size:10px;">(監控與秘密)</small><div class="lock-icon">🔒</div>
+            </div>
+
+            <div style="position:absolute; bottom:20px; width:100%; text-align:center; color:#888; font-size:12px;">
+                * 點擊區域進行深度搜查 *
+            </div>
+        </div>
+    </div>
+
+    <script src="script_theme2.js"></script>
 </body>
 </html>
